@@ -17,28 +17,24 @@ public class CourierCreateTest {
     @Before
     public void setUp() {
         scooterClient = new ScooterClient();
-      }
+    }
 
     @Test
     @DisplayName("Check new courier can create with valid date")
-
     public void courierCreateWithValidCredentials() {
         courierWithValidData = Courier.getRandomCourier();
         CourierCredentials courierCredentialsWithValidData = new CourierCredentials(courierWithValidData);
-
         ValidatableResponse createResponse = scooterClient.createCourier(courierWithValidData);
         courierId = scooterClient.getIdCourier(courierCredentialsWithValidData);
         int statusCode = createResponse.extract().statusCode();
         boolean message = createResponse.extract().path("ok");
-
+        Assert.assertEquals("Не верный статус-код", 201, statusCode);
         Assert.assertNotEquals("Не удалось создать курьера", 0, courierId);
         Assert.assertTrue("Не верное сообщение об ошибке", message);
-        Assert.assertEquals("Не верный статус-код", 201, statusCode);
     }
 
     @Test
     @DisplayName("Check new courier can't create without password")
-
     public void courierCreateCannotWithoutPassword() {
         Courier courierWithoutPassword = Courier.builder()
                 .login("ValidTestLogin")
@@ -47,8 +43,8 @@ public class CourierCreateTest {
         ValidatableResponse createResponse = scooterClient.createCourier(courierWithoutPassword);
         int statusCode = createResponse.extract().statusCode();
         String message = createResponse.extract().path("message");
-        Assert.assertEquals("Не верное сообщение об ошибке", "Недостаточно данных для создания учетной записи", message);
         Assert.assertEquals("Не верный статус-код", 400, statusCode);
+        Assert.assertEquals("Не верное сообщение об ошибке", "Недостаточно данных для создания учетной записи", message);
     }
 
     @Test
@@ -61,8 +57,8 @@ public class CourierCreateTest {
         ValidatableResponse createResponse = scooterClient.createCourier(courierWithoutLogin);
         int statusCode = createResponse.extract().statusCode();
         String message = createResponse.extract().path("message");
-        Assert.assertEquals("Не верное сообщение об ошибке", "Недостаточно данных для создания учетной записи", message);
         Assert.assertEquals("Не верный статус-код", 400, statusCode);
+        Assert.assertEquals("Не верное сообщение об ошибке", "Недостаточно данных для создания учетной записи", message);
     }
 
     @Test
@@ -73,28 +69,25 @@ public class CourierCreateTest {
                 .password("ValidPassword")
                 .build();
         CourierCredentials courierCredentialsWithoutFirstName = new CourierCredentials(courierWithoutFirstName);
-
         ValidatableResponse createResponse = scooterClient.createCourier(courierWithoutFirstName);
         courierId = scooterClient.getIdCourier(courierCredentialsWithoutFirstName);
         int statusCode = createResponse.extract().statusCode();
         boolean message = createResponse.extract().path("ok");
+        Assert.assertEquals("Не верный статус-код", 201, statusCode);
         Assert.assertNotEquals("Не удалось создать курьера", 0, courierId);
         Assert.assertTrue("Не верное сообщение об ошибке", message);
-        Assert.assertEquals("Не верный статус-код", 201, statusCode);
     }
 
     @Test
     @DisplayName("Check  can't create two identical courier")
     public void createCannotTwoIdenticalCouriers() {
         courierWithValidData = Courier.getRandomCourier();
-
         ValidatableResponse createFirstCourierResponse = scooterClient.createCourier(courierWithValidData);
         ValidatableResponse createSecondCourierResponse = scooterClient.createCourier(courierWithValidData);
         int statusCode = createSecondCourierResponse.extract().statusCode();
         String message = createSecondCourierResponse.extract().path("message");
-
-        Assert.assertEquals("Не верное сообщение об ошибке", "Этот логин уже используется. Попробуйте другой.", message);
         Assert.assertEquals("Не верный статус-код", 409, statusCode);
+        Assert.assertEquals("Не верное сообщение об ошибке", "Этот логин уже используется. Попробуйте другой.", message);
     }
 
     @Test
@@ -102,14 +95,12 @@ public class CourierCreateTest {
     public void createCannotCouriersWithRepeatedLogin() {
         courierWithValidData = Courier.getRandomCourier();
         Courier courierWithRepeatedLogin = new Courier(courierWithValidData.getLogin(), "newPassword", "Name");
-
         ValidatableResponse createFirstCourierResponse = scooterClient.createCourier(courierWithValidData);
         ValidatableResponse createSecondCourierResponse = scooterClient.createCourier(courierWithRepeatedLogin);
         int statusCode = createSecondCourierResponse.extract().statusCode();
         String message = createSecondCourierResponse.extract().path("message");
-
-        Assert.assertEquals("Не верное сообщение об ошибке", "Этот логин уже используется. Попробуйте другой.", message);
         Assert.assertEquals("Не верный статус-код", 409, statusCode);
+        Assert.assertEquals("Не верное сообщение об ошибке", "Этот логин уже используется. Попробуйте другой.", message);
     }
 
 

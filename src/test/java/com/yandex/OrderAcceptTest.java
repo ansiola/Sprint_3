@@ -90,8 +90,8 @@ public class OrderAcceptTest {
         ValidatableResponse acceptOrderResponse = scooterClient.putAcceptOrder(orderId, courierId);
         int statusCode = acceptOrderResponse.extract().statusCode();
         String message = acceptOrderResponse.extract().path("message");
-        Assert.assertEquals("Не верный статус-код", 404, statusCode);
-        Assert.assertEquals("Не верное сообщение об ошибке", "Заказа с таким id не существует", message);
+        Assert.assertEquals("Не верный статус-код", 400, statusCode);
+        Assert.assertEquals("Не верное сообщение об ошибке", "Недостаточно данных для поиска", message);
     }
 
     @After

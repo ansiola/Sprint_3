@@ -22,7 +22,6 @@ public class OrderGetByTrackTest {
         Response getOrderResponse = scooterClient.getOrderByTrack(trackId);
         Order order = getOrderResponse.body().as(OrderWithTrack.class).getOrder();
         int statusCode = getOrderResponse.then().extract().statusCode();
-
         Assert.assertEquals("Не верный статус-код", 200, statusCode);
         Assert.assertEquals("Возвращен не верный заказ", order.getTrack(), trackId);
     }
@@ -34,7 +33,6 @@ public class OrderGetByTrackTest {
         Response getOrderResponse = scooterClient.getOrderByTrack(notValidTrackId);
         int statusCode = getOrderResponse.then().extract().statusCode();
         String message = getOrderResponse.then().extract().path("message");
-
         Assert.assertEquals("Не верный статус-код", 404, statusCode);
         Assert.assertEquals("Не верное сообщение об ошибке", "Заказ не найден", message);
     }
@@ -46,7 +44,6 @@ public class OrderGetByTrackTest {
         Response getOrderResponse = scooterClient.getOrderByTrack(trackId);
         int statusCode = getOrderResponse.then().extract().statusCode();
         String message = getOrderResponse.then().extract().path("message");
-
         Assert.assertEquals("Не верный статус-код", 400, statusCode);
         Assert.assertEquals("Не верное сообщение об ошибке", "Недостаточно данных для поиска", message);
     }
