@@ -1,4 +1,5 @@
 package com.yandex;
+
 import lombok.Data;
 
 @Data

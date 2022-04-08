@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 
-
 @RunWith(Parameterized.class)
 public class OrderCreateTest {
     private final String[] colorArray;
@@ -19,17 +18,13 @@ public class OrderCreateTest {
         this.colorArray = colorArray;
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Test scooter color: {0}{1}")
     public static Object[][] colorArrayData() {
-        String[] colorBlack = {"BLACK"};
-        String[] colorGrey = {"GREY"};
-        String[] colorAll = {"BLACK", "GREY"};
-        String[] colorEmpty = {};
         return new Object[][]{
-                {colorBlack},
-                {colorGrey},
-                {colorAll},
-                {colorEmpty},
+                {new String[]{"BLACK"}},
+                {new String[]{"GREY"}},
+                {new String[]{"BLACK", "GREY"}},
+                {null},
         };
     }
 
@@ -39,7 +34,6 @@ public class OrderCreateTest {
         scooterClient = new ScooterClient();
         Order orderWithValidData = Order.getRandomOrder();
         orderWithValidData.setColor(colorArray);
-
         ValidatableResponse createResponse = scooterClient.createOrder(orderWithValidData);
         int statusCode = createResponse.extract().statusCode();
         if (statusCode == 201) {
@@ -47,8 +41,7 @@ public class OrderCreateTest {
         } else {
             orderId = 0;
         }
-
-        Assert.assertNotEquals("Не удалось создать заказ", 0, orderId);
         Assert.assertEquals("Не верный статус-код", 201, statusCode);
+        Assert.assertNotEquals("Не удалось создать заказ", 0, orderId);
     }
 }

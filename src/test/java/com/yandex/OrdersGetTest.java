@@ -24,7 +24,6 @@ public class OrdersGetTest {
         Response ordersResponse = scooterClient.getOrders();
         OrdersList scooterOrders = ordersResponse.body().as(OrdersList.class);
         int statusCode = ordersResponse.then().extract().statusCode();
-
         if (statusCode == 200) {
             totalOrder = ordersResponse.then().extract().path("pageInfo.total");
         } else {
